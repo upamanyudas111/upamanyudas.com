@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upamanyu Das</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #333;
+      background-color: #fff;
+    }
+    
+    .container {
+      display: flex;
+      min-height: 100vh;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .sidebar {
+      width: 200px;
+      padding: 40px 20px;
+      border-right: 1px solid #eee;
+      background-color: #fafafa;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    
+    .sidebar h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #000;
+    }
+    
+    .sidebar .subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 32px;
+      line-height: 1.4;
+    }
+    
+    .nav-links {
+      list-style: none;
+    }
+    
+    .nav-links li {
+      margin-bottom: 16px;
+    }
+    
+    .nav-links a {
+      color: #666;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: #0066cc;
+    }
+    
+    .main-content {
+      flex: 1;
+      margin-left: 200px;
+      padding: 40px;
+    }
+    
+    .page {
+      display: none;
+      contain: layout style;
+    }
+    
+    .page.active {
+      display: block;
+    }
+    
+    h2 {
+      font-size: 28px;
+      font-weight: 600;
+      margin: 0 0 24px 0;
+      color: #000;
+    }
+    
+    h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 32px 0 16px 0;
+      color: #000;
+    }
+    
+    p {
+      margin: 0 0 16px 0;
+    }
+    
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    
+    .questions-list li {
+      margin: 0 0 12px 0;
+    }
+    
+    .questions-list a {
+      color: #0066cc;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    
+    .questions-list a:hover {
+      text-decoration: underline;
+    }
+    
+    /* Improved photography gallery styles */
+    .photography-gallery {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      margin: 24px 0;
+    }
+    
+    .photo-row {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    
+    .photo-container {
+      text-align: center;
+    }
+    
+    .photo-container.single {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    .photo-container.paired {
+      flex: 1;
+      max-width: 450px;
+    }
+    
+    .photo-container img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      display: block;
+    }
+    
+    .photo-container img:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Ensure consistent height for paired images */
+    .photo-row .photo-container.paired img {
+      max-height: 600px;
+      object-fit: cover;
+      width: 100%;
+    }
+    
+    /* Lightbox styles */
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .lightbox img {
+      max-width: 95%;
+      max-height: 95%;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+    
+    .lightbox .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1001;
+    }
+    
+    .lightbox .close:hover {
+      opacity: 0.7;
+    }
+    
+    .book-item {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .book-item:last-child {
+      border-bottom: none;
+    }
+    
+    .book-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #000;
+      margin-bottom: 4px;
+    }
+    
+    .book-author {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+    
+    .book-description {
+      color: #555;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    
+    .bio-content {
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    
+    .bio-content p {
+      margin-bottom: 20px;
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #eee;
+      }
+      
+      .main-content {
+        margin-left: 0;
+        padding: 20px;
+      }
+      
+      .container {
+        flex-direction: column;
+      }
+      
+      .photography-gallery {
+        gap: 20px;
+      }
+      
+      .photo-row {
+        flex-direction: column;
+        gap: 16px;
+      }
+      
+      .photo-container.paired {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="sidebar">
+      <h1>Upamanyu Das</h1>
+      <img src="photos/prop.jpeg" alt="Profile Photo" style="width: 120px; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 16px;">
+      <p class="subtitle">Fourth year medical student exploring medical science, technology, and books</p>
+      
+      <ul class="nav-links">
+        <li><a onclick="showPage('questions')" class="nav-link active">Questions</a></li>
+        <li><a onclick="showPage('photography')" class="nav-link">Photography</a></li>
+        <li><a onclick="showPage('books')" class="nav-link">Book Reviews</a></li>
+        <li><a onclick="showPage('bio')" class="nav-link">Bio</a></li>
+      </ul>
+    </nav>
+
+    <main class="main-content">
+      <div id="questions" class="page active">
+        <h2>Questions</h2>
+        <p>A space for questions, both big and small, that come up while learning medicine.</p>
+        
+        <ul class="questions-list">
+  <li>
+    <a href="quest/appendicits-oldpeople.html">
+      Why doesn’t appendicitis pain radiate from the umbilicus to the right lower quadrant in older patients?
+    </a>
+  </li>
+</ul>
+
+      <div id="photography" class="page">
+        <h2>Photography</h2>
+        <p>Some of the photos I've taken. Click on any image to view it full-screen.</p>
+
+        <div class="photography-gallery">
+          <div class="photo-row">
+            <div class="photo-container single">
+              <img src="photos/DSC_0363.jpg" alt="Photography by Upamanyu Das" onclick="openLightbox(this.src)">
+            </div>
+          </div>
+          
+          <div class="photo-row">
+            <div class="photo-container paired">
+              <img src="photos/IMG_0638.HEIC" alt="Photography by Upamanyu Das" onclick="openLightbox(this.src)">
+            </div>
+            <div class="photo-container paired">
+              <img src="photos/IMG_1633.JPG" alt="Photography by Upamanyu Das" onclick="openLightbox(this.src)">
+            </div>
+          </div>
+
+          <div class="photo-row">
+            <div class="photo-container single">
+              <img src="photos/20231125_163143-1.jpg" alt="Photography by Upamanyu Das" onclick="openLightbox(this.src)">
+            </div>
+          </div>
+          
+          <div class="photo-row">
+            <div class="photo-container single">
+              <img src="photos/blueyellowandaman.jpg" alt="Photography by Upamanyu Das" onclick="openLightbox(this.src)">
+            </div>
+          </div>
+          
+          <div class="photo-row">
+            <div class="photo-container single">
+              <img src="photos/orangeredandaman.jpg" alt="Photography by Upamanyu Das" onclick="openLightbox(this.src)">
+            </div>
+          </div>
+          
+          <div class="photo-row">
+            <div class="photo-container single">
+              <img src="photos/rhinoflowercerous.jpg" alt="Photography by Upamanyu Das" onclick="openLightbox(this.src)">
+            </div>
+          </div>
+          
+          <div class="photo-row">
+            <div class="photo-container single">
+              <img src="photos/treeleavesupside down.jpg" alt="Photography by Upamanyu Das" onclick="openLightbox(this.src)">
+            </div>
+          </div>
+          
+          <div class="photo-row">
+            <div class="photo-container single">
+              <img src="photos/elephantsbacks.jpg" alt="Photography by Upamanyu Das" onclick="openLightbox(this.src)">
+            </div>
+          </div>
+          
+           <div class="photo-row">
+            <div class="photo-container single">
+              <img src="photos/IMG_4089.JPG" alt="Photography by Upamanyu Das" onclick="openLightbox(this.src)">
+            </div>
+          </div>
+          
+          <div class="photo-row">
+            <div class="photo-container single">
+              <img src="photos/leopardhorizontal.png" alt="Photography by Upamanyu Das" onclick="openLightbox(this.src)">
+            </div>
+          </div>
+          
+          <div class="photo-row">
+            <div class="photo-container paired">
+              <img src="photos/IMG_0213.HEIC" alt="Photography by Upamanyu Das" onclick="openLightbox(this.src)">
+            </div>
+            <div class="photo-container paired">
+              <img src="photos/DSC_0118.jpg" alt="Photography by Upamanyu Das" onclick="openLightbox(this.src)">
+            </div>
+          </div>
+          
+          <div class="photo-row">
+            <div class="photo-container single">
+              <img src="photos/IMG_2400.JPG" alt="Photography by Upamanyu Das" onclick="openLightbox(this.src)">
+            </div>
+          </div>
+          
+          <div class="photo-row">
+            <div class="photo-container paired">
+              <img src="photos/IMG_0926.HEIC" alt="Photography by Upamanyu Das" onclick="openLightbox(this.src)">
+            </div>
+            <div class="photo-container paired">
+              <img src="photos/turqhill.PNG" alt="Photography by Upamanyu Das" onclick="openLightbox(this.src)">
+            </div>
+          </div>
+          
+          <div class="photo-row">
+            <div class="photo-container single">
+              <img src="photos/26374981_185336065552690_8721923116009259008_n.jpg" alt="Photography by Upamanyu Das" onclick="openLightbox(this.src)">
+            </div>
+          </div>
+          
+          <div class="photo-row">
+            <div class="photo-container single">
+              <img src="photos/DSCN8194-1.jpg" alt="Photography by Upamanyu Das" onclick="openLightbox(this.src)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="books" class="page">
+        <h2>Book Reviews</h2>
+        <p>Books that have opened up how I see the world, broadened my sense of what life could look like, or simply made me feel something that stayed with me.</p>
+        <p>Here are a few that mattered most to me.</p>
+        <div class="book-item">
+          <div class="book-title">Source Code: My Beginnings</div>
+          <div class="book-author">Bill Gates</div>
+          <div class="book-description">3.75/5. It's too short. Too wholesome. I wish it were a longer, more detailed biography.
+
+I had been waiting for this book for months and finished it in one go.
+
+I think it's because he's older now and sees most things through a nostalgic lens. But I wish we could hear from the younger Bill Gates—the sharp, ruthless, fiercely intelligent businessman who was relentless in his pursuit of success. That raw, unapologetic version of Bill would have made for a far more gripping memoir.
+
+The book merely displays Bill's life but doesn't fully highlight his unique character—a tough guy with supreme intellect, brash confidence, and relentless drive. It misses out on capturing that fiery mix of intensity and genius that sets him apart.
+
+There's plenty I've learned about him from interviews on YouTube and the book Hard Drive that didn't make it into this memoir. For example, the library competition to see who could read the most books over the summer—a perfect glimpse into his early ambition—wasn't mentioned. At times, it almost feels like the story of an ordinary smart kid who grew up in suburban Seattle and just happened to do well in life.
+
+Key details were skipped. He only mentions his perfect math SAT score, not the language section—or the fact that he took the SAT twice to get that perfect score. And the long list of books that shaped him? As a big fan of Bill's work, I probably know more about him than the average reader, but even basic details like these deserve a spot in the memoir. For someone who is both an intellectual and business icon, this book should have been richer, deeper, and more complete.
+
+Still, it was very entertaining, and I couldn't put it down.</div>
+        </div>
+        
+        <div class="book-item">
+          <div class="book-title">The Selfish Gene</div>
+          <div class="book-author">Richard Dawkins</div>
+          <div class="book-description">A revolutionary way of looking at evolution that puts genes, not individuals or species, at the center of natural selection. Dawkins' clear prose makes complex ideas accessible while fundamentally changing how we understand life, cooperation, and human nature.</div>
+        </div>
+      </div>
+
+      <div id="bio" class="page">
+        <h2>Bio</h2>
+        <div class="bio-content">
+          <p>I'm a fourth year medical student trying to make sense of the science we learn and the questions that often go unasked. This blog is a space where I write about things that fascinate me. whether it's how AI could change medicine, what happens inside our cells during disease, or ideas that come to me while studying or working on research.</p>
+          <p>If you're also curious about how medicine works at a deeper level or just enjoy thoughtful questions, I hope you find something here that resonates.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+    <span class="close" onclick="closeLightbox()">&times;</span>
+    <img id="lightbox-img" src="" alt="Full size image">
+  </div>
+
+  <script>
+    const pages = document.querySelectorAll('.page');
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    function showPage(pageId) {
+      for (let i = 0; i < pages.length; i++) {
+        pages[i].style.display = pages[i].id === pageId ? 'block' : 'none';
+      }
+      
+      for (let i = 0; i < navLinks.length; i++) {
+        navLinks[i].classList.toggle('active', 
+          navLinks[i].textContent.toLowerCase().includes(pageId) || 
+          (pageId === 'books' && navLinks[i].textContent.includes('Book')) ||
+          (pageId === 'questions' && navLinks[i].textContent === 'Questions')
+        );
+      }
+    }
+    
+    function openLightbox(imageSrc) {
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      lightboxImg.src = imageSrc;
+      lightbox.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeLightbox() {
+      const lightbox = document.getElementById('lightbox');
+      lightbox.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+    
+    // Close lightbox with Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeLightbox();
+      }
+    });
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      showPage('questions');
+    });
+  </script>
+</body>
+</html>
